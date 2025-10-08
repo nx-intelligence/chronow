@@ -1,6 +1,6 @@
 {
   "name": "chronow",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "description": "Redis-backed (or MongoDB-only) shared memory and topic/queue dataflow with dual-tier retention (hot in Redis/MongoDB, warm/cold in Chronos-DB)",
   "type": "module",
   "main": "dist/index.cjs",

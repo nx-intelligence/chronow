@@ -1,42 +1,43 @@
 # Chronow
 
-**Redis-first (or MongoDB-only) shared memory and service-bus style topics with optional Chronos-DB durability.**
+**The TypeScript library that works with Redis OR just MongoDB - your choice!**
 
-Chronow provides simple APIs for dual-tier retention, at-least-once delivery, and message queuing patterns similar to Azure Service Bus. Works with Redis for high performance, or MongoDB-only mode for development/testing.
+Chronow provides Redis-backed (or MongoDB-only) shared memory and service-bus style messaging with dual-tier retention. **Same code, different configuration** - switch between Redis (high performance) and MongoDB-only mode (easy development) without changing a single line of application code.
+
+## 🎯 Why Chronow?
+
+**The v0.9.6 Superpower**: Write your code once, run it with Redis in production or MongoDB-only in development - **just change the configuration**. No Redis installation required for local development!
 
 ## Features
 
-- **Shared Memory**: Key/value storage with hot (Redis/MongoDB) + warm (Chronos-DB) tiers
-- **Topics & Subscriptions**: Azure Service Bus-like messaging patterns
-- **Dual Retention**: Hot TTL in Redis/MongoDB, warm retention in Chronos-DB
-- **MongoDB-only Mode**: Use without Redis for development/testing (v0.9.5+)
-- **At-least-once delivery**: Redis Streams or MongoDB collections + Consumer Groups
-- **Retry with backoff**: Automatic redelivery with exponential backoff
-- **Dead Letter Queue**: Capture failed messages for analysis
-- **Multi-tenant**: Optional namespace and tenant isolation
-- **TypeScript-first**: Fully typed API
+- **🔄 Redis OR MongoDB** - Same API, different backend (configuration only)
+- **📦 Shared Memory**: Key/value storage with hot + warm tiers
+- **📨 Topics & Subscriptions**: Azure Service Bus-like messaging patterns
+- **💾 Dual Retention**: Hot TTL (Redis/MongoDB) + warm storage (Chronos-DB)
+- **🚀 MongoDB-only Mode**: **NO Redis required** - perfect for dev/testing
+- **✅ At-least-once delivery**: Consumer groups, ack/nack, retries
+- **🔁 Retry with backoff**: Automatic redelivery with exponential backoff
+- **💀 Dead Letter Queue**: Capture and persist failed messages
+- **👥 Multi-tenant**: Optional namespace and tenant isolation
+- **📘 TypeScript-first**: Fully typed API with strict type safety
 
 ## Installation
 
+### Quick Start (MongoDB-only - No Redis!)
 ```bash
 npm install chronow chronos-db mongodb
 ```
 
-### With Redis (Production)
+### Production (With Redis)
 ```bash
 npm install chronow chronos-db mongodb ioredis
 ```
 
-### MongoDB-only (Development/Testing)
-```bash
-npm install chronow chronos-db mongodb
-```
-
-Requires:
+**Requirements:**
 - Node.js 18+
 - chronos-db v2.3+
-- **Either** Redis 5.0+ (6.2+ recommended) **OR** MongoDB 4.4+
-- ioredis (optional if using MongoDB-only mode)
+- **Either** Redis 5.0+ (for production) **OR** MongoDB 4.4+ (works standalone!)
+- ioredis is **optional** - only needed if using Redis mode
 
 ## Quick Start
 
@@ -92,10 +93,13 @@ import { Chronow, configFromEnv } from 'chronow';
 const cw = await Chronow.init(configFromEnv());
 ```
 
-### Usage (Same API for Both Modes!)
+### ✨ The Magic: Same Code, Both Modes!
 
 ```typescript
-// Shared memory
+// THIS CODE WORKS IDENTICALLY IN BOTH REDIS AND MONGODB-ONLY MODES!
+// Just change the initialization above - business logic never changes!
+
+// Shared memory - works in both modes
 await cw.shared.set('greeting', { text: 'hello' }, {
   hotTtlSeconds: 120,
   warm: { persist: true, retentionDays: 90 }
@@ -104,7 +108,7 @@ await cw.shared.set('greeting', { text: 'hello' }, {
 const value = await cw.shared.get('greeting');
 console.log(value); // { text: 'hello' }
 
-// Topics & subscriptions
+// Topics & subscriptions - works in both modes
 await cw.bus.ensureTopic('payments');
 await cw.bus.ensureSubscription('payments', 'fraud-detector', {
   visibilityTimeoutMs: 30000,
@@ -112,23 +116,25 @@ await cw.bus.ensureSubscription('payments', 'fraud-detector', {
   retryBackoffMs: [1000, 5000, 30000],
 });
 
-// Publish
+// Publish - works in both modes
 await cw.bus.publish('payments', { orderId: '123', amount: 42.5 }, {
   persistWarmCopy: true,
   headers: { type: 'payment.created' },
 });
 
-// Consume
+// Consume - works in both modes
 for await (const msg of cw.bus.consume('payments', 'fraud-detector')) {
   try {
     console.log('Processing:', msg.payload);
     await processPayment(msg.payload);
-    await msg.ack();
+    await msg.ack();  // Same ack/nack API in both modes!
   } catch (err) {
     console.error('Failed:', err);
     await msg.nack({ requeue: true });
   }
 }
+
+// ↑ This exact code runs with Redis OR MongoDB - zero changes needed!
 ```
 
 ## Environment Variables

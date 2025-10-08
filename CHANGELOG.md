@@ -5,6 +5,18 @@ All notable changes to Chronow will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.6] - 2025-10-08
+
+### Changed
+
+- **Enhanced README**: Crystal clear documentation of Redis-optional feature
+- **Improved messaging**: Emphasized "same code, both modes" capability
+- **Better examples**: Highlighted MongoDB-only mode benefits
+
+### Notes
+
+This release improves documentation clarity with no code changes from 0.9.5.
+
 ## [0.9.5] - 2025-10-08
 
 ### Added
