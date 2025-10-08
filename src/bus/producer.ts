@@ -1,8 +1,11 @@
 import type { RedisClient } from '../core/redis';
+import type { MongoAdapter } from '../core/mongoAdapter';
 import { buildTopicKey } from '../core/keys';
 import { toFlatArray, hashValue } from '../core/codecs';
 import { ChronosWarm } from '../warm/chronosAdapter';
 import type { PublishOptions } from './types';
+
+type RedisLike = RedisClient | MongoAdapter;
 
 export interface ProducerDefaults {
   namespace: string;
@@ -14,7 +17,7 @@ export interface ProducerDefaults {
 
 export class Producer {
   constructor(
-    private redis: RedisClient,
+    private redis: RedisLike,
     private warm: ChronosWarm,
     private defaults: ProducerDefaults
   ) {}

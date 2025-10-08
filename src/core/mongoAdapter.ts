@@ -69,11 +69,12 @@ export class MongoAdapter {
   pipeline(): any {
     // Return a mock pipeline that queues operations
     const ops: Array<() => Promise<any>> = [];
+    const self = this;
     return {
-      set: (...args: any[]) => { ops.push(() => this.set(...args)); return this; },
-      get: (...args: any[]) => { ops.push(() => this.get(...args)); return this; },
-      del: (...args: any[]) => { ops.push(() => this.del(...args)); return this; },
-      xadd: (...args: any[]) => { ops.push(() => this.xadd(...args)); return this; },
+      set: function(...args: any[]) { ops.push(() => self.set.apply(self, args as any)); return this; },
+      get: function(...args: any[]) { ops.push(() => self.get.apply(self, args as any)); return this; },
+      del: function(...args: any[]) { ops.push(() => self.del.apply(self, args as any)); return this; },
+      xadd: function(...args: any[]) { ops.push(() => self.xadd.apply(self, args as any)); return this; },
       exec: async () => {
         const results = [];
         for (const op of ops) {

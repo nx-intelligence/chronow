@@ -1,7 +1,10 @@
 import type { RedisClient } from '../core/redis';
+import type { MongoAdapter } from '../core/mongoAdapter';
 import { buildTopicKey, buildConsumerGroup } from '../core/keys';
 import type { SubscriptionConfig, SubscriptionState } from './types';
 import { ChronosWarm } from '../warm/chronosAdapter';
+
+type RedisLike = RedisClient | MongoAdapter;
 
 export interface TopicManagerDefaults {
   namespace: string;
@@ -14,7 +17,7 @@ export interface TopicManagerDefaults {
 
 export class TopicManager {
   constructor(
-    private redis: RedisClient,
+    private redis: RedisLike,
     private warm: ChronosWarm,
     private defaults: TopicManagerDefaults
   ) {}

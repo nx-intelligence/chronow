@@ -1,7 +1,10 @@
 import type { RedisClient } from '../core/redis';
+import type { MongoAdapter } from '../core/mongoAdapter';
 import { encodeJson, decodeJson } from '../core/codecs';
 import { buildKey } from '../core/keys';
 import { ChronosWarm } from '../warm/chronosAdapter';
+
+type RedisLike = RedisClient | MongoAdapter;
 
 export interface SharedSetOptions {
   namespace?: string;
@@ -38,7 +41,7 @@ export interface SharedMemoryDefaults {
 
 export class SharedMemory {
   constructor(
-    private redis: RedisClient,
+    private redis: RedisLike,
     private warm: ChronosWarm,
     private defaults: SharedMemoryDefaults
   ) {}

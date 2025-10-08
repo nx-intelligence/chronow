@@ -36,13 +36,13 @@ export interface EnvConfig {
 /**
  * Build Chronow config from environment variables
  */
-export function configFromEnv(env: EnvConfig = process.env): ChronowConfig {
+export function configFromEnv(env: any = process.env): ChronowConfig {
   const mongoOnly = env.CHRONOW_MONGO_ONLY === 'true';
   
   const config: ChronowConfig = {
     mongoOnly,
     chronos: {
-      config: buildChronosConfig(env),
+      config: buildChronosConfig(env as EnvConfig),
     },
     defaults: {
       namespace: 'default',

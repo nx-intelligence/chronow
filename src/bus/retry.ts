@@ -1,6 +1,9 @@
 import type { RedisClient } from '../core/redis';
+import type { MongoAdapter } from '../core/mongoAdapter';
 import { buildRetryKey } from '../core/keys';
 import { nowMs, calculateBackoff } from '../core/time';
+
+type RedisLike = RedisClient | MongoAdapter;
 
 export interface RetryManagerDefaults {
   namespace: string;
@@ -19,7 +22,7 @@ export interface RetryEntry {
 
 export class RetryManager {
   constructor(
-    private redis: RedisClient,
+    private redis: RedisLike,
     private defaults: RetryManagerDefaults
   ) {}
 

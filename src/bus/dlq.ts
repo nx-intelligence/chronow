@@ -1,7 +1,10 @@
 import type { RedisClient } from '../core/redis';
+import type { MongoAdapter } from '../core/mongoAdapter';
 import { buildDlqKey } from '../core/keys';
 import { toFlatArray } from '../core/codecs';
 import { ChronosWarm } from '../warm/chronosAdapter';
+
+type RedisLike = RedisClient | MongoAdapter;
 
 export interface DlqManagerDefaults {
   namespace: string;
@@ -17,7 +20,7 @@ export interface DeadLetterOptions {
 
 export class DlqManager {
   constructor(
-    private redis: RedisClient,
+    private redis: RedisLike,
     private warm: ChronosWarm,
     private defaults: DlqManagerDefaults
   ) {}

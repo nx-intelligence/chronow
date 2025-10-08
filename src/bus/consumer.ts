@@ -1,4 +1,5 @@
 import type { RedisClient } from '../core/redis';
+import type { MongoAdapter } from '../core/mongoAdapter';
 import { buildTopicKey, buildConsumerGroup } from '../core/keys';
 import { fromFlatArray, toFlatArray } from '../core/codecs';
 import { nowMs } from '../core/time';
@@ -6,6 +7,8 @@ import type { ChronowMessage, ConsumeOptions, SubscriptionState } from './types'
 import { TopicManager } from './topics';
 import { RetryManager } from './retry';
 import { DlqManager } from './dlq';
+
+type RedisLike = RedisClient | MongoAdapter;
 
 export interface ConsumerDefaults {
   namespace: string;
@@ -15,7 +18,7 @@ export interface ConsumerDefaults {
 
 export class Consumer {
   constructor(
-    private redis: RedisClient,
+    private redis: RedisLike,
     private topicManager: TopicManager,
     private retryManager: RetryManager,
     private dlqManager: DlqManager,
