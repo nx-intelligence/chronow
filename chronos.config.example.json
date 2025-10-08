@@ -1,0 +1,22 @@
+{
+  "dbConnections": {
+    "mongo-primary": {
+      "mongoUri": "mongodb://localhost:27017"
+    }
+  },
+  "spacesConnections": {},
+  "databases": {
+    "messaging": {
+      "tenantDatabases": [
+        {
+          "tenantId": "default",
+          "dbConnRef": "mongo-primary",
+          "spaceConnRef": "",
+          "bucket": "",
+          "dbName": "chronos_messaging_default"
+        }
+      ]
+    }
+  }
+}
+

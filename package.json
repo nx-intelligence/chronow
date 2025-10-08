@@ -1,0 +1,64 @@
+{
+  "name": "chronow",
+  "version": "0.9.5",
+  "description": "Redis-backed (or MongoDB-only) shared memory and topic/queue dataflow with dual-tier retention (hot in Redis/MongoDB, warm/cold in Chronos-DB)",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --dts --format cjs,esm",
+    "lint": "eslint .",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "redis",
+    "chronos-db",
+    "shared-memory",
+    "message-queue",
+    "service-bus",
+    "pubsub",
+    "streams",
+    "typescript"
+  ],
+  "author": "nx-intelligence",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nx-intelligence/chronow.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nx-intelligence/chronow/issues"
+  },
+  "homepage": "https://github.com/nx-intelligence/chronow#readme",
+  "dependencies": {
+    "ioredis": "^5",
+    "chronos-db": "^2.3.0",
+    "mongodb": "^6"
+  },
+  "peerDependencies": {
+    "ioredis": "^5"
+  },
+  "peerDependenciesMeta": {
+    "ioredis": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "typescript": "^5",
+    "tsup": "^8",
+    "eslint": "^9"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
+
